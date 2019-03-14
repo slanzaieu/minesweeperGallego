@@ -1,19 +1,31 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class Difficulty extends JFrame {
 
-    private JPanel mainPanel;
-    private JLabel question_level;
-    private JButton difficult_level;
-    private JButton medium_level;
-    private JButton easy_level;
-
-    public Difficulty() {
-        initializeGui();
+    public enum Level {
+        Easy, Medium, Hard
     }
 
-    private void initializeGui() {
+    public Level level;
+
+    private JPanel mainPanel;
+    private JLabel setLevel;
+    private JButton easyLevel;
+    private JButton mediumLevel;
+    private JButton hardLevel;
+
+
+
+    public Difficulty() {
+
+        Gui();
+
+    }
+
+    private void Gui() {
+
         mainPanel = new JPanel();
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         mainPanel.setPreferredSize(new Dimension(300, 300));
@@ -21,26 +33,73 @@ public class Difficulty extends JFrame {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 25));
         panel1.setPreferredSize(new Dimension(300, 50));
-        question_level = new JLabel("Choose a difficulty to start");
-        panel1.add(question_level);
+
+        setLevel = new JLabel("Set Level Difficulty");
+
+        panel1.add(setLevel);
+
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         panel2.setPreferredSize(new Dimension(300, 175));
+
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         panel3.setPreferredSize(new Dimension(200, 50));
-        difficult_level = new JButton("Difficult");
-        panel3.add(difficult_level);
+
+        easyLevel = new JButton("Easy");
+        easyLevel.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent e){
+
+                setVisible(false);
+                level = Level.Easy;
+                int numbCells = 64;
+                int numbBombs = 8;
+                new Game(level, numbCells, numbBombs);
+
+            }
+        });
+
+        panel3.add(easyLevel);
+
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         panel4.setPreferredSize(new Dimension(200, 50));
-        medium_level = new JButton("Medium");
-        panel4.add(medium_level);
+
+        mediumLevel= new JButton("Medium");
+        mediumLevel.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent e){
+
+                setVisible(false);
+                level = Level.Medium;
+                int numbCells = 162;
+                int numbBombs = 24;
+                new Game(level, numbCells, numbBombs);
+
+            }
+        });
+
+        panel4.add(mediumLevel);
+
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         panel5.setPreferredSize(new Dimension(200, 50));
-        easy_level = new JButton("Easy");
-        panel5.add(easy_level);
+
+        hardLevel = new JButton("Hard");
+        panel5.add(hardLevel);
+        hardLevel.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent e){
+
+                setVisible(false);
+                level = Level.Hard;
+                int numbCells = 262;
+                int numbBombs = 68;
+                new Game(level, numbCells, numbBombs);
+
+            }
+        });
 
         panel2.add(panel3);
         panel2.add(panel4);
@@ -52,7 +111,7 @@ public class Difficulty extends JFrame {
         add(mainPanel);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("MineSweeper");
+        setTitle("Mine Sweeper");
         setSize(300, 300);
         setVisible(true);
     }
