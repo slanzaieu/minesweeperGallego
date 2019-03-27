@@ -2,18 +2,26 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Random;
 
-public class Board extends JFrame {
+public class Board extends JFrame implements ClickObserver {
 
 
     private JPanel mainPanel;
-    private JButton cell;
+    private Cell cell;
+    private HashMap<Point, Cell> finderCellsHashMap = new HashMap<>();
+    private Game game;
 
-    public Board(Difficulty.Level level) {
-        Gui(level);
+
+
+    public Board(Difficulty.Level level, int numbCells, int numbBombs) {
+        initializeGui(level, numbCells, numbBombs);
     }
 
-    public void Gui(Difficulty.Level level) {
+
+
+    public void initializeGui(Difficulty.Level level, int numbCells, int numbBombs) {
 
         mainPanel = new JPanel();
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -21,78 +29,143 @@ public class Board extends JFrame {
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-        JPanel newRow;
+        int boardDimension;
+        int frameDimension;
 
-        switch(level) {
+        switch (level) {
 
             case Easy:
-
-                mainPanel.setPreferredSize(new Dimension(325, 325));
-                boardPanel.setPreferredSize(new Dimension(300, 300));
-                setSize(350, 350);
-
-                for (int i = 0; i < 8; i++) {
-                    newRow = new JPanel();
-                    for (int j = 0; j < 8; j++){
-                        Point point = new Point(i,j);
-                        cell = new Cell(point);
-                        cell.setPreferredSize(new Dimension(50, 50));
-                        newRow.add(cell);
-                        newRow.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
-                    }
-
-                    boardPanel.add(newRow);
-                }
+                boardDimension = (int) Math.sqrt(numbCells);
+                frameDimension = 500;
+                boardCreator(boardDimension, frameDimension);
+                bombsPlacer(numbBombs, boardDimension);
+                addAction(boardDimension);
 
                 break;
 
             case Medium:
 
-                mainPanel.setPreferredSize(new Dimension(400, 400));
-                boardPanel.setPreferredSize(new Dimension(375, 375));
-                setSize(425, 425);
-
-                for (int i = 0; i < 14; i++) {
-                    newRow = new JPanel();
-                    for (int j = 0; j < 14; j++){
-                        Point point = new Point(i,j);
-                        cell = new Cell(point);
-                        cell.setPreferredSize(new Dimension(25, 25));
-                        newRow.add(cell);
-                        newRow.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
-                    }
-                    boardPanel.add(newRow);
-                }
-
+                boardDimension = (int) Math.sqrt(numbCells);
+                frameDimension = 450;
+                boardCreator(boardDimension, frameDimension);
+                bombsPlacer(numbBombs, boardDimension);
+                addAction(boardDimension);
                 break;
 
             case Hard:
+                boardDimension = (int) Math.sqrt(numbCells);
+                frameDimension = 550;
+                boardCreator(boardDimension, frameDimension);
+                bombsPlacer(numbBombs, boardDimension);
+                addAction(boardDimension);
+                break;
 
-                mainPanel.setPreferredSize(new Dimension(525, 525));
-                boardPanel.setPreferredSize(new Dimension(500, 500));
-
-                setSize(550, 550);
-                for (int i = 0; i < 18; i++) {
-                    newRow = new JPanel();
-                    for (int j = 0; j < 18; j++){
-                        Point point = new Point(i,j);
-                        cell = new Cell(point);
-                        cell.setPreferredSize(new Dimension(25, 25));
-                        newRow.add(cell);
-                        newRow.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
-                    }
-
-                    boardPanel.add(newRow);
-                }
         }
-
-        mainPanel.add(boardPanel);
 
         add(mainPanel);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Mine Sweeper");
+        setTitle("MineSweeper Gallego");
         setVisible(true);
 
     }
+
+    public void boardCreator(int boardDimension, int frameDimension) {
+
+        JPanel boardPanel = new JPanel();
+        boardPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+
+        JPanel newRow;
+
+        mainPanel.setPreferredSize(new Dimension(frameDimension, frameDimension));
+        boardPanel.setPreferredSize(new Dimension(frameDimension, frameDimension));
+        setSize(frameDimension, frameDimension);
+
+        for (int i = 0; i < boardDimension; i++) {
+
+            newRow = new JPanel();
+
+            for (int j = 0; j < boardDimension; j++) {
+
+                Point point = new Point(i, j);
+                cell = new EmptyCell(point);
+
+                finderCellsHashMap.put(point, cell);
+                cell.setPreferredSize(new Dimension(30, 30));
+                newRow.add(cell);
+                newRow.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
+
+            }
+
+            boardPanel.add(newRow);
+        }
+        mainPanel.add(boardPanel);
+
+    }
+
+    public void bombsPlacer(int numbBombs, int boardDimension) {
+
+        boolean isABomb;
+
+        int counterBombs = 0;
+
+        Random random = new Random();
+
+        while (counterBombs < numbBombs) {
+
+            int x = random.nextInt(boardDimension);
+            int y = random.nextInt(boardDimension);
+
+            Point presentPoint = new Point(x, y);
+            isABomb = finderCellsHashMap.get(presentPoint).getBomb();
+
+            if (!isABomb) {
+                finderCellsHashMap.get(presentPoint).setBomb(true);
+                cell = new BombCell(presentPoint);
+
+                finderCellsHashMap.put(presentPoint, cell);
+                counterBombs++;
+
+            }
+
+        }
+
+    }
+
+    @Override
+    public Point cellClicked(Cell cell) {
+        return cell.getPoint();
+    }
+
+    public void addAction(int boardDimension) {
+
+        for (Point point : finderCellsHashMap.keySet()) {
+
+            Cell presentCell = finderCellsHashMap.get(point);
+            String cell_class = presentCell.getClass().getName();
+            System.out.println(cell_class);
+
+            presentCell.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    if (presentCell instanceof EmptyCell) {
+                        presentCell.setBackground(Color.GREEN);
+                        presentCell.setOpaque(true);
+                        presentCell.setBorderPainted(false);
+
+                    } else if (presentCell instanceof BombCell) {
+                        presentCell.setBackground(Color.RED);
+                        presentCell.setOpaque(true);
+                        presentCell.setBorderPainted(false);
+                        game.finishedGame(true);
+                    }
+                }
+            });
+        }
+
+    }
+
 }
+
