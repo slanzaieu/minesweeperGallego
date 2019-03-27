@@ -2,12 +2,14 @@ import java.awt.*;
 
 public class BombCell extends Cell {
 
-    String cellLabel;
-
     public BombCell(Point point) {
 
         super(point);
-        this.cellLabel = "*" ;
+        super.setBomb(true);
+        super.setString("x");
+        super.setBackground(Color.RED);
+        super.setOpaque(true);
 
     }
 }
+
