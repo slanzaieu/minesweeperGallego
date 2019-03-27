@@ -1,4 +1,5 @@
-package PACKAGE_NAME;
+import java.awt.*;
 
-public class ClickObserver {
+public interface ClickObserver {
+    Point cellClicked(Cell cell);
 }
