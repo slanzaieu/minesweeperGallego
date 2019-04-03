@@ -5,10 +5,15 @@ public class EmptyCell extends Cell {
     public EmptyCell(Point point) {
 
         super(point);
-        super.setBomb(false);
+        // super.setBomb(false);
         super.setString(" ");
-
 
     }
 
+    @Override
+    public boolean isBomb() {
+        return false;
+    }
+
 }
+
