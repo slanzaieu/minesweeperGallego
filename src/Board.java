@@ -8,7 +8,8 @@ import java.util.Random;
 
 import javax.swing.*;
 
-public class Board extends JFrame implements ClickObserver {
+public class Board extends JFrame implements ClickObserver
+{
 
     private JPanel mainPanel;
     private JPanel leftPanel;
@@ -17,9 +18,11 @@ public class Board extends JFrame implements ClickObserver {
     private Game game;
     private int rightCells;
     private int cellsLeft;
-    private JLabel cellsCount;
+    private JLabel cellsCount = new JLabel();
+    private JLabel bombCount = new JLabel();
 
-    public Board(Game game, Difficulty.Level level, int numbCells, int numbBombs) {
+    public Board(Game game, Difficulty.Level level, int numbCells, int numbBombs)
+    {
         this.game = game;
         this.rightCells = 0;
         this.cellsLeft = numbCells - numbBombs;
@@ -27,29 +30,26 @@ public class Board extends JFrame implements ClickObserver {
         initializeGui(level, numbCells, numbBombs, cellsLeft);
     }
 
-    public void initializeGui(Difficulty.Level level, int numbCells, int numbBombs, int cellsLeft) {
+    public void initializeGui(Difficulty.Level level, int numbCells, int numbBombs, int cellsLeft)
+    {
 
         mainPanel = new JPanel();
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
         leftPanel = new JPanel();
-        JLabel cellsCount = new JLabel();
         cellsCount.setText(String.valueOf(cellsLeft));
-        JLabel bombCount = new JLabel();
         bombCount.setText(String.valueOf(numbBombs));
+
         bombCount.setOpaque(true);
         bombCount.setBackground(Color.RED);
-        Font font = new Font("Courier", Font.BOLD,15);
+        Font font = new Font("Courier", Font.BOLD, 15);
         cellsCount.setFont(font);
         bombCount.setFont(font);
-
 
         leftPanel.add(cellsCount, BorderLayout.EAST);
         leftPanel.add(bombCount, BorderLayout.WEST);
 
         mainPanel.add(leftPanel, BorderLayout.PAGE_START);
-
-
 
         int boardDimension;
         int frameDimension;
@@ -60,14 +60,12 @@ public class Board extends JFrame implements ClickObserver {
                 boardDimension = (int) Math.sqrt(numbCells);
                 frameDimension = 500;
 
-
                 break;
 
             case Medium:
 
                 boardDimension = (int) Math.sqrt(numbCells);
                 frameDimension = 450;
-
 
                 break;
 
@@ -91,8 +89,8 @@ public class Board extends JFrame implements ClickObserver {
 
     }
 
-
-    private JPanel boardCreator(int boardDimension, int frameDimension) {
+    private JPanel boardCreator(int boardDimension, int frameDimension)
+    {
 
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -103,11 +101,13 @@ public class Board extends JFrame implements ClickObserver {
         boardPanel.setPreferredSize(new Dimension(frameDimension, frameDimension));
         setSize(frameDimension, frameDimension);
 
-        for (int i = 0; i < boardDimension; i++) {
+        for (int i = 0; i < boardDimension; i++)
+        {
 
             newRow = new JPanel();
 
-            for (int j = 0; j < boardDimension; j++) {
+            for (int j = 0; j < boardDimension; j++)
+            {
 
                 Point point = new Point(i, j);
                 cell = new EmptyCell(point);
@@ -126,7 +126,8 @@ public class Board extends JFrame implements ClickObserver {
         return boardPanel;
     }
 
-    public void bombsPlacer(JPanel boardPanel, int numbBombs, int boardDimension) {
+    public void bombsPlacer(JPanel boardPanel, int numbBombs, int boardDimension)
+    {
 
         boolean isABomb;
 
@@ -134,7 +135,8 @@ public class Board extends JFrame implements ClickObserver {
 
         Random random = new Random();
 
-        while (counterBombs < numbBombs) {
+        while (counterBombs < numbBombs)
+        {
 
             int x = random.nextInt(boardDimension);
             int y = random.nextInt(boardDimension);
@@ -144,9 +146,8 @@ public class Board extends JFrame implements ClickObserver {
 
             JPanel row = (JPanel) boardPanel.getComponent(y);
 
-
-
-            if (!isABomb) {
+            if (!isABomb)
+            {
 
                 cell = new BombCell(presentPoint);
 
@@ -158,7 +159,6 @@ public class Board extends JFrame implements ClickObserver {
                 row.add(cell, x);
 
                 counterBombs++;
-
             }
 
         }
@@ -166,29 +166,31 @@ public class Board extends JFrame implements ClickObserver {
     }
 
     @Override
-    public Point cellClicked(Cell cell) {
+    public Point cellClicked(Cell cell)
+    {
         return cell.getPoint();
     }
 
-    public void addAction(int boardDimension, int numbBombs, int numbCells) {
+    public void addAction(int boardDimension, int numbBombs, int numbCells)
+    {
 
-        for (Entry<Point, Cell> entry : finderCellsHashMap.entrySet()) {
-
+        for (Entry<Point, Cell> entry : finderCellsHashMap.entrySet())
+        {
 
             Cell presentCell = entry.getValue();
 
-
-
-            presentCell.addActionListener(new ActionListener() {
+            presentCell.addActionListener(new ActionListener()
+            {
 
                 @Override
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed(ActionEvent e)
+                {
 
+                    if (presentCell instanceof EmptyCell)
+                    {
 
-
-                    if (presentCell instanceof EmptyCell) {
-
-                        if (presentCell.getBackground().equals(Color.GREEN)) {
+                        if (presentCell.getBackground().equals(Color.GREEN))
+                        {
                             return;
                         }
 
@@ -197,29 +199,33 @@ public class Board extends JFrame implements ClickObserver {
                         presentCell.setBorderPainted(false);
                         presentCell.setEnabled(false);
 
-
                         rightCells++;
                         cellsLeft = (numbCells - numbBombs) - rightCells;
 
-                        if (numbCells - rightCells <= numbBombs) {
+                        if (numbCells - rightCells <= numbBombs)
+                        {
                             game.wonGame(true);
-                        } else {
+                        } else
+                        {
                             game.wonGame(false);
                         }
 
-                    } else if (presentCell instanceof BombCell) {
-                        presentCell.setBackground(Color.RED);
+                    } else if (presentCell instanceof BombCell)
+                    {
+                        presentCell.setBackground(Color.WHITE);
                         presentCell.setOpaque(true);
 
-                        ImageIcon icon = new ImageIcon(Board.this.getClass().getResource("bombpng.png"));
-
+                        ImageIcon icon = new ImageIcon(Board.this.getClass().getResource("unnamed.png"));
+                        presentCell.setIcon(icon);
                         presentCell.setBorderPainted(false);
                         presentCell.setEnabled(false);
                         game.finishedGame(true);
 
-                    } else {
+                    } else
+                    {
                         System.out.println(presentCell);
                     }
+                    cellsCount.setText(String.valueOf(cellsLeft));
                 }
             });
         }
