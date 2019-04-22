@@ -19,9 +19,10 @@ public class Game {
     public void wonGame(boolean wontheGame) {
 
         if (wontheGame) {
-            String textWinner = "YOU BEAT ME!";
-            String AnnouncementWinner = "You finished the game! :)";
+            String textWinner = "YOU ARE THE GALICIAN SCARCE SUN";
+            String AnnouncementWinner = "You WON the galician game! I guess you're from Madrid  ";
             JOptionPane.showMessageDialog(null, AnnouncementWinner, textWinner, JOptionPane.INFORMATION_MESSAGE);
+            new Difficulty();
 
 
         }
@@ -31,9 +32,10 @@ public class Game {
 
         if (lostGame) {
 
-            String textLoser = "GAME OVER";
-            String Announcement = "The game has finished! :(";
+            String textLoser = "GAME OVER. PERCEBES WON.";
+            String Announcement = "Sorry about that, but Einstein once said a galician never fails, only learns! :(";
             JOptionPane.showMessageDialog(null, Announcement, textLoser, JOptionPane.INFORMATION_MESSAGE);
+            new Difficulty();
 
         }
     }
