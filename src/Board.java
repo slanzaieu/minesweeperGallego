@@ -51,10 +51,6 @@ public class Board extends JFrame implements ClickObserver {
 
 
 
-
-        // boardPanel = new JPanel();
-        // boardPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-
         int boardDimension;
         int frameDimension;
 
@@ -63,9 +59,7 @@ public class Board extends JFrame implements ClickObserver {
             case Easy:
                 boardDimension = (int) Math.sqrt(numbCells);
                 frameDimension = 500;
-                // boardPanel = boardCreator(boardDimension, frameDimension);
-                // bombsPlacer(numbBombs, boardDimension);
-                // addAction(boardDimension, numbBombs, numbCells);
+
 
                 break;
 
@@ -73,9 +67,7 @@ public class Board extends JFrame implements ClickObserver {
 
                 boardDimension = (int) Math.sqrt(numbCells);
                 frameDimension = 450;
-                // boardPanel = boardCreator(boardDimension, frameDimension);
-                // bombsPlacer(numbBombs, boardDimension);
-                // addAction(boardDimension, numbBombs, numbCells);
+
 
                 break;
 
@@ -83,9 +75,7 @@ public class Board extends JFrame implements ClickObserver {
             default:
                 boardDimension = (int) Math.sqrt(numbCells);
                 frameDimension = 550;
-                // boardPanel = boardCreator(boardDimension, frameDimension);
-                // bombsPlacer(numbBombs, boardDimension);
-                // addAction(boardDimension, numbBombs, numbCells);
+
                 break;
         }
 
@@ -140,8 +130,6 @@ public class Board extends JFrame implements ClickObserver {
 
         boolean isABomb;
 
-        // JPanel newnewRow;
-
         int counterBombs = 0;
 
         Random random = new Random();
@@ -156,10 +144,10 @@ public class Board extends JFrame implements ClickObserver {
 
             JPanel row = (JPanel) boardPanel.getComponent(y);
 
-            // newnewRow = new JPanel();
+
 
             if (!isABomb) {
-                // finderCellsHashMap.get(presentPoint).setBomb(true);
+
                 cell = new BombCell(presentPoint);
 
                 finderCellsHashMap.put(presentPoint, cell);
@@ -168,8 +156,7 @@ public class Board extends JFrame implements ClickObserver {
                 System.out.format("Bomb(%d, %d)%n", x, y);
                 row.remove(x);
                 row.add(cell, x);
-                // newnewRow.add(cell);
-                // newnewRow.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
+
                 counterBombs++;
 
             }
@@ -187,18 +174,17 @@ public class Board extends JFrame implements ClickObserver {
 
         for (Entry<Point, Cell> entry : finderCellsHashMap.entrySet()) {
 
-            // Cell presentCell = finderCellsHashMap.get(point);
+
             Cell presentCell = entry.getValue();
 
-            // String cell_class = presentCell.getClass().getName();
-            // System.out.println(cell_class);
+
 
             presentCell.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    // int i = 0;
+
 
                     if (presentCell instanceof EmptyCell) {
 
@@ -210,11 +196,10 @@ public class Board extends JFrame implements ClickObserver {
                         presentCell.setOpaque(true);
                         presentCell.setBorderPainted(false);
                         presentCell.setEnabled(false);
-                        // i++;
+
+
                         rightCells++;
                         cellsLeft = (numbCells - numbBombs) - rightCells;
-
-
 
                         if (numbCells - rightCells <= numbBombs) {
                             game.wonGame(true);
@@ -225,6 +210,9 @@ public class Board extends JFrame implements ClickObserver {
                     } else if (presentCell instanceof BombCell) {
                         presentCell.setBackground(Color.RED);
                         presentCell.setOpaque(true);
+
+                        ImageIcon icon = new ImageIcon(Board.this.getClass().getResource("bombpng.png"));
+
                         presentCell.setBorderPainted(false);
                         presentCell.setEnabled(false);
                         game.finishedGame(true);
