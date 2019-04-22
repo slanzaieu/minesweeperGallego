@@ -14,7 +14,6 @@ class CloseFrame {
                 f.setContentPane( close );
                 close.addActionListener( new ActionListener(){
                     public void actionPerformed(ActionEvent ae) {
-                        // make the app. end (programatically)
                         f.dispose();
                     }
                 } );
