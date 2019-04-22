@@ -10,7 +10,6 @@ public abstract class Cell extends JButton {
 
         this.point = point;
         text = " ";
-
     }
 
     public void setString(String text) {
@@ -24,7 +23,5 @@ public abstract class Cell extends JButton {
     }
 
     public abstract boolean isBomb();
-
-
 
 }
